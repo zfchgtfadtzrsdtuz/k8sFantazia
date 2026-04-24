@@ -1,0 +1,54 @@
+name: Docker Image CI
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Generate image tag
+      run: echo "IMAGE_TAG=$(date +'%s')" >> $GITHUB_ENV
+
+    - uses: actions/checkout@v4
+
+    - name: Login to GHCR
+      run: docker login ghcr.io -u zfchgtfadtzrsdtuz -p ${{ secrets.GHCR_TOKEN }}
+
+    - name: Build and push backend
+      run: |
+        docker build ./backend --file ./backend/Dockerfile --tag ghcr.io/zfchgtfadtzrsdtuz/k8scities-backend:$IMAGE_TAG
+        docker push ghcr.io/zfchgtfadtzrsdtuz/k8scities-backend:$IMAGE_TAG
+
+    - name: Build and push frontend
+      run: |
+        docker build ./frontend --file ./frontend/Dockerfile --tag ghcr.io/zfchgtfadtzrsdtuz/k8scities-frontend:$IMAGE_TAG
+        docker push ghcr.io/zfchgtfadtzrsdtuz/k8scities-frontend:$IMAGE_TAG
+
+    - name: Update deployment.yaml with new image tags
+      run: |
+        sed -i 's|ghcr.io/zfchgtfadtzrsdtuz/k8scities-backend:.*|ghcr.io/zfchgtfadtzrsdtuz/k8scities-backend:'"$IMAGE_TAG"'|' deployment.yaml
+        sed -i 's|ghcr.io/zfchgtfadtzrsdtuz/k8scities-frontend:.*|ghcr.io/zfchgtfadtzrsdtuz/k8scities-frontend:'"$IMAGE_TAG"'|' deployment.yaml
+
+        git config --global user.name "zfchgtfadtzrsdtuz"
+        git config --global user.email "janiafaszalegeny@gmail.com"
+        git add deployment.yaml
+        git commit -m "Update K8S deployment yaml file"
+        git push
+
+    - name: Deploy to Kubernetes
+      run: |
+        mkdir -p ~/.kube
+        echo "${{ secrets.K8S_CONFIG_BASE64 }}" | base64 -d > ~/.kube/config
+        kubectl apply -f deployment.yaml

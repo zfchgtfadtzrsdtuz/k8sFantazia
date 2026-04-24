@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Városok és Látnivalók</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <h1>Fedezd fel a városokat</h1>
+    <p class="lead">Egyszerű projekt — a backendbe égetett adatokkal</p>
+  </header>
+
+  <main class="container">
+    <section class="sidebar">
+      <h2>Városok</h2>
+      <ul id="citiesList" class="list"></ul>
+    </section>
+
+    <section class="content">
+      <h2 id="cityTitle">Válassz várost</h2>
+      <p id="cityDesc" class="muted"></p>
+
+      <h3>Látnivalók</h3>
+      <ul id="attractionsList" class="list"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">&copy; k8sFantazia — egyszerű demo</footer>
+
+  <script>
+    const BACKEND = 'http://k8scities-backend-pinterbalint.jcloud.jedlik.cloud';
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

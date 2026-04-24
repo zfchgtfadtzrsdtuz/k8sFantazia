@@ -1,0 +1,106 @@
+# kubectl create secret docker-registry ghcr-auth-secret --docker-server=ghcr.io --docker-username=zfchgtfadtzrsdtuz --docker-password=$GHCR_TOKEN
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8scities-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: k8scities-backend
+  template:
+    metadata:
+      labels:
+        pod: k8scities-backend
+    spec:
+      containers:
+        - name: k8scities-backend-container
+          image: ghcr.io/zfchgtfadtzrsdtuz/k8scities-backend:1777014462
+          ports:
+            - containerPort: 3000
+      imagePullSecrets:
+        - name: ghcr-auth-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8scities-backend-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    pod: k8scities-backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8scities-backend-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: k8scities-backend-pinterbalint.jcloud.jedlik.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: k8scities-backend-clusterip
+                port:
+                  number: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8scities-frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: k8scities-frontend
+  template:
+    metadata:
+      labels:
+        pod: k8scities-frontend
+    spec:
+      containers:
+        - name: k8scities-frontend-container
+          image: ghcr.io/zfchgtfadtzrsdtuz/k8scities-frontend:1777014462
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: ghcr-auth-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8scities-frontend-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    pod: k8scities-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8scities-frontend-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: k8scities-pinterbalint.jcloud.jedlik.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: k8scities-frontend-clusterip
+                port:
+                  number: 80
