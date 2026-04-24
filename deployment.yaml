@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: k8scities-backend-container
-          image: ghcr.io/zfchgtfadtzrsdtuz/k8scities-backend:1777016532
+          image: ghcr.io/zfchgtfadtzrsdtuz/k8scities-backend:1777016721
           ports:
             - containerPort: 3000
       imagePullSecrets:
@@ -68,7 +68,7 @@ spec:
     spec:
       containers:
         - name: k8scities-frontend-container
-          image: ghcr.io/zfchgtfadtzrsdtuz/k8scities-frontend:1777016532
+          image: ghcr.io/zfchgtfadtzrsdtuz/k8scities-frontend:1777016721
           ports:
             - containerPort: 80
       imagePullSecrets:
