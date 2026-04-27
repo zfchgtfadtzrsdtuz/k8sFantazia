@@ -11,8 +11,9 @@ const attractions = [
   { id: 1, city_id: 1, name: 'Parlament', description: 'Lenyűgöző épület a Duna partján.' },
   { id: 2, city_id: 1, name: 'Halászbástya', description: 'Kilátópont a városra.' },
   { id: 3, city_id: 2, name: 'Károly-híd', description: 'Középkori híd a Moldván.' },
-  { id: 4, city_id: 3, name: 'Colosseum', description: 'Ókori amfiteátrum.' },
-  { id: 5, city_id: 3, name: 'Trevi-kút', description: 'Híres barokk szökőkút.' }
+  { id: 4, city_id: 2, name: 'Vár', description: 'Középkori vár a Moldván.' },
+  { id: 5, city_id: 3, name: 'Colosseum', description: 'Ókori amfiteátrum.' },
+  { id: 6, city_id: 3, name: 'Trevi-kút', description: 'Híres barokk szökőkút.' }
 ];
 
 function json(res, obj, code = 200) {
